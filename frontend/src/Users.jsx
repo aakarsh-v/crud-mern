@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import './Users.css';
 
 function Users() {
     const [users, setUsers] = useState([]);
@@ -38,6 +40,8 @@ function Users() {
                     return updatedUsers;
                 });
 
+               
+
             } catch (err) {
                 console.error(err);
                 setError("Failed to delete user");
@@ -47,68 +51,73 @@ function Users() {
 
     if (loading) return (
         <div className="d-flex vh-100 justify-content-center align-items-center">
-            <div className="spinner-border text-primary" role="status">
+            <div className="spinner-border loading-spinner" role="status">
                 <span className="visually-hidden">Loading...</span>
             </div>
         </div>
     );
 
     return (
-        <div className="min-vh-100 bg-light py-5">
+        <div className="page-container">
             <div className="container">
+                <h1 className="app-title">User Management</h1>
+                <p className="app-subtitle">A simple interface to view user data.</p>
+                
                 <div className="row justify-content-center">
                     <div className="col-12 col-lg-10">
-                        <div className="card shadow-sm">
-                            <div className="card-body">
-                                <div className="d-flex justify-content-between align-items-center mb-4">
-                                    <h2 className="card-title mb-0 text-primary">User Management</h2>
-                                    <Link to="/create" className="btn btn-primary">
-                                        <i className="bi bi-plus-lg me-2"></i>Add New User
-                                    </Link>
-                                </div>
-
+                        <div className="card">
+                            <div className="card-header d-flex justify-content-between align-items-center">
+                                <h2 className="mb-0">User List</h2>
+                                <Link to="/create" className="btn btn-primary">
+                                    <i className="bi bi-plus-lg me-2"></i>Add User
+                                </Link>
+                            </div>
+                            
+                            <div className="card-body p-0">
                                 {error && (
-                                    <div className="alert alert-danger d-flex align-items-center" role="alert">
+                                    <div className="alert alert-danger m-3" role="alert">
                                         <i className="bi bi-exclamation-triangle-fill me-2"></i>
                                         {error}
                                     </div>
                                 )}
 
                                 {users.length === 0 ? (
-                                    <div className="text-center py-5">
-                                        <i className="bi bi-people display-1 text-muted mb-3"></i>
-                                        <p className="lead text-muted">No users found</p>
+                                    <div className="empty-state">
+                                        <i className="bi bi-people"></i>
+                                        <p>No users found</p>
                                     </div>
                                 ) : (
                                     <div className="table-responsive">
-                                        <table className="table table-hover align-middle">
-                                            <thead className="table-light">
+                                        <table className="table">
+                                            <thead>
                                                 <tr>
-                                                    <th scope="col">Name</th>
-                                                    <th scope="col">Email</th>
-                                                    <th scope="col">Age</th>
-                                                    <th scope="col" className="text-end">Actions</th>
+                                                    <th>NAME</th>
+                                                    <th>EMAIL</th>
+                                                    <th>AGE</th>
+                                                    <th className="text-end">ACTION</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {users.map((user) => (
                                                     <tr key={user._id}>
-                                                        <td className="fw-medium">{user.name}</td>
-                                                        <td>{user.email}</td>
+                                                        <td className="user-name">{user.name}</td>
+                                                        <td className="user-email">{user.email}</td>
                                                         <td>{user.age}</td>
-                                                        <td className="text-end">
-                                                            <Link 
-                                                                to={`/update/${user._id}`} 
-                                                                className="btn btn-outline-primary btn-sm me-2"
-                                                            >
-                                                                <i className="bi bi-pencil me-1"></i>Edit
-                                                            </Link>
-                                                            <button 
-                                                                onClick={() => handleDelete(user._id)} 
-                                                                className="btn btn-outline-danger btn-sm"
-                                                            >
-                                                                <i className="bi bi-trash me-1"></i>Delete
-                                                            </button>
+                                                        <td>
+                                                            <div className="action-buttons">
+                                                                <Link 
+                                                                    to={`/update/${user._id}`} 
+                                                                    className="btn btn-outline-primary btn-sm"
+                                                                >
+                                                                    Update
+                                                                </Link>
+                                                                <button 
+                                                                    onClick={() => handleDelete(user._id)} 
+                                                                    className="btn btn-outline-danger btn-sm"
+                                                                >
+                                                                    Delete
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 ))}
