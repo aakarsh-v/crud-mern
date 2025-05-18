@@ -1,6 +1,6 @@
-import { Router } from "express";
+// import { Router } from "express";
 
-const router = Router();
-import userModel from "../model/Users.js";
+// const router = Router();
+// import userModel from "../model/Users.js";
 
-router.post("/create", )
+// router.post("/create", )

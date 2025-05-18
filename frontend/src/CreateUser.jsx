@@ -1,36 +1,44 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function CreateUser() {
-    const [formData, setFormData] = useState({
-        Name: "",
-        Email: "",
-        Age: ""
-    });
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [age, setAge] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("User Created:", formData);
-        // Here you can send `formData` to your backend or update state in parent component
-    };
+        setError("");
+        
+        axios.post("http://localhost:3001/createUser", {
+            name, email, age
+        })
+        .then(result => {
+            console.log(result);
+            navigate('/');
+        })
+        .catch(err => {
+            console.log(err);
+            setError("Failed to create user. Please try again.");
+        });
+    }
 
     return (
         <div className="d-flex vh-100 justify-content-center align-items-center">
             <div className="w-50 bg-white p-3 rounded">
                 <h2>Create User</h2>
+                {error && <div className="alert alert-danger">{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <label>Name</label>
                         <input
                             type="text"
-                            name="Name"
                             className="form-control"
-                            value={formData.Name}
-                            onChange={handleChange}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                             required
                         />
                     </div>
@@ -38,10 +46,9 @@ function CreateUser() {
                         <label>Email</label>
                         <input
                             type="email"
-                            name="Email"
                             className="form-control"
-                            value={formData.Email}
-                            onChange={handleChange}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                     </div>
@@ -49,10 +56,9 @@ function CreateUser() {
                         <label>Age</label>
                         <input
                             type="number"
-                            name="Age"
                             className="form-control"
-                            value={formData.Age}
-                            onChange={handleChange}
+                            value={age}
+                            onChange={(e) => setAge(e.target.value)}
                             required
                         />
                     </div>
